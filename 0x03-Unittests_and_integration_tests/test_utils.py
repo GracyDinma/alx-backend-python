@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Test for access nested map in utils
 """
 from utils import access_nested_map
