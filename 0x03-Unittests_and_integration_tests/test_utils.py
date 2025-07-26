@@ -43,7 +43,10 @@ class TestGetJson(unittest.TestCase):
         """A method that test that utils.get_json
         returns expected result.
         """
-        mock_get.return_value.json.return_value = {"test_played"}
+        mock_get.return = Mock(status_code=200)
+        mock_get.return_value.json.return_value = expected
+
+        result = get_json(url)
 
 if __name__ == "__main__":
     unittest.main()
