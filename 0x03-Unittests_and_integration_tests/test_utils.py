@@ -50,5 +50,14 @@ class TestGetJson(unittest.TestCase):
         self.assertEqual(result, test_payload)
         mock_get.assert_called_once_with(test_url)
 
+class TestMemoize(unittest.TestCase):
+    """class that test the memoize decorator on a function
+    """
+    @memoize
+    def a_method(self):
+        return 42
+    def a_property(self):
+        return self.a_method()
+
 if __name__ == "__main__":
     unittest.main()
