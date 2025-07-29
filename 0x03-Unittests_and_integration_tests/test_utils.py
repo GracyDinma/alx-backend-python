@@ -7,6 +7,7 @@ from parameterized import parameterized
 from unittest.mock import patch, Mock
 import requests
 
+
 class TestAccessNestedMap(unittest.TestCase):
     """class of Test Access Nested Map
     """
@@ -29,6 +30,7 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
+
 
 class TestGetJson(unittest.TestCase):
     """class that test for JSON from remote url
@@ -54,10 +56,17 @@ class TestMemoize(unittest.TestCase):
     """class that test the memoize decorator on a function
     """
     @memoize
+    def test_memoize(callable):
+        """Decorator to memoize a method
+        """
     def a_method(self):
         return 42
     def a_property(self):
         return self.a_method()
+
+    mock_get.return_value.json.return_value = {"resut": "a_method"}
+    mock_get.assert_called_once_with(a_method)
+
 
 if __name__ == "__main__":
     unittest.main()
