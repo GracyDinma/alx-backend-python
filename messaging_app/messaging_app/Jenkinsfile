@@ -40,5 +40,24 @@ pipeline {
                 junit 'report/test-results.xml'
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    app = docker.build("gracedinma/messaging_app:latest")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('htpps://index.io/v1', 'docker-credentials') {
+                    // pushing docker image
+                        app.push()
+                    }
+                }
+            }
+        }
     }
 }
