@@ -10,7 +10,7 @@ pipeline {
             steps {
                 git branch: 'master',
                     credentialsId: 'github-credentials',
-                    url: 'https://github.com/Gracydinma/alx-backend-python',
+                    url: 'https://github.com/Gracydinma/alx-backend-python'
             }
         }
         stage('Install Dependencies') {
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Publish Report') {
             steps {
-                junit 'report/test-results.xml'
+                junit 'reports/test-results.xml'
             }
         }
 
@@ -52,7 +52,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('htpps://index.io/v1', 'docker-credentials') {
+                    docker.withRegistry('https://index.io/v1', 'docker-credentials') {
                     // pushing docker image
                         app.push()
                     }
