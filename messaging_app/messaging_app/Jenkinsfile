@@ -1,0 +1,44 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.10'
+        }
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master',
+                    credentialsId: github-credentials',
+                    url: 'https://github.com/Gracydinma/alx-backend-python',
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                // Install pytest
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install pytest
+                    pip3 install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pytest --junitxml=reports/test-results.xml
+                '''
+            }
+        }
+
+        stage('Publish Report') {
+            steps {
+                junit 'report/test-results.xml'
+            }
+        }
+    }
+}
