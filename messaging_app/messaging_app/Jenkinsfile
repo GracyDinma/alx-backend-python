@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'master',
-                    credentialsId: github-credentials',
+                    credentialsId: 'github-credentials',
                     url: 'https://github.com/Gracydinma/alx-backend-python',
             }
         }
