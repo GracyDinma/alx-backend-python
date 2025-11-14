@@ -1,19 +1,30 @@
 #!/usr/bin/env python3
-"""Generic utilities
+"""
+Unit tests for the access_nested_map function in utils.py
+This module verifies that access_nested_map correctly retrieves
+values from a nested dictionary with a sequence of keys.
 """
 import unittest
-
+from parameterized import parameterized
+from utils import access_nested_map
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    def test_access_nested_map(self):
-        self.assertEqual({"a": {"b": {"c":}}}, 1)
-        self.assertEqual(nested_map, ["a", "b", "c"]) 1
+    """
+    Test suite for the access_nested_map function.
+    Ensures correct value retrieval from nested dictionaries.
+    """
+    @parameterized.expand([
+        ({"a": 1}, ("a",), 1),
+        ({"a": {"b": 2}}, ("a",), {"b": 2}),
+        ({"a": {"b": 2}}, ("a", "b"), 2),
+    ])
+    def test_access_nested_map(self, nested_map, path, expected):
+        """
+        Test that access_nested_map returns the expected result.
+        """
+        self.assertEqual(access_nested_map(nested_map, path), expected)
 
-    @parameterized.expand:
-        ({"a": 1}, ("a"))
-        ({"a": {"b": 2}}, ("a))
-        ({"a": {"b": 2}}, ("a", "b"))
 
-        assertEqual([nested_map, path], expected result)
-
+if __name__ == "__main__":
+    unittest.main()
