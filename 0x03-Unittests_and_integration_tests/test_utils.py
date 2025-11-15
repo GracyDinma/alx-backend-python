@@ -43,12 +43,19 @@ class TestGetJson(unittest.TestCase):
     """
     Test suite for get_json and ensures retrieval of expected result.
     """
-    @patch('utils.requests.get')
-    def test_get_json(self, mock_get):
-        mock_get.return_value.json.return_value = {'test_url': "test_payload"}
-        data = get_json("http://holberton.io")
-        self.assertEqual(data, {'test_url': "test_payload"})
-        mock_get.assert_called_once_with("http://holberton.io")
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False}),
+    ])
+    @patch("utils.requests.get")
+    def test_get_json(self, test_url, test_payload, mock_get):
+        """
+        Test that get_json returns the expected JSON payload.
+        """
+        mock_get.return_value.json.return_value = test_payload
+        result = get_json(test_url)
+        self.assertEqual(result, test_payload)
+        mock_get.assert_called_once_with(test_url)
 
 
 if __name__ == "__main__":
