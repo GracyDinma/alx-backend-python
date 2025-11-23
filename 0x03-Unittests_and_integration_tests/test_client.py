@@ -4,7 +4,7 @@ A test suite for github org client.
 """
 import unittest
 from client import GithubOrgClient
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from utils import get_json
 from parameterized import parameterized
 
@@ -29,3 +29,23 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}"
         )
+
+    def test_public_repos_url(self):
+        """Test that _public_repos_url returns the correct value"""
+
+        mock_payload = {"repos_url": "https://api.github.com/orgs/{org}"}
+
+        with ( 
+            patch(
+                "client.GithubOrgClient.org",
+                new_callable=PropertyMock
+            ) as mock_org
+        ):
+            mock_org.return_value = mock_payload
+
+            client = GithubOrgClient("test-org")
+
+            self.assertEqual(
+                client._public_repos_url,
+                "https://api.github.com/orgs/{org}"
+            )
