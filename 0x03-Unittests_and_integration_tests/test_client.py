@@ -7,7 +7,8 @@ from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 from unittest.mock import patch, PropertyMock
 from utils import get_json
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
+from parameterized import parameterized_class
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -97,9 +98,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         def side_effect(url, *args, **kwargs):
             mock_resp = Mock()
-            if url.endswith("orgs/test-org"):
+            if url.endswith("/orgs/test-org"):
                 mock_resp.json.return_value = cls.org_payload
-            elif url.endswith("orgs/test-org/repos"):
+            elif url.endswith("/orgs/test-org/repos"):
                 mock_resp.json.return_value = cls.repos_payload
             return mock_resp
         cls.mock_get.side_effect = side_effect
