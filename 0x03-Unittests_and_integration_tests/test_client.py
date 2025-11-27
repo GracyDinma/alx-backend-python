@@ -83,12 +83,7 @@ class TestGithubOrgClient(unittest.TestCase):
 @parameterized_class(
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
     [
-        (
-            org_payload,
-            repos_payload,
-            expected_repos,
-            apache2_repos
-        )
+        (org_payload, repos_payload, expected_repos, apache2_repos)
     ]
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -96,16 +91,16 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Mock requests.get to return fixtures."""
-        cls.get_patcher = patch("client.requests.get")
+        cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
-        def side_effect(url, *args, **kwargs):
-            mock_resp = Mock()
-            if url.endswith("/orgs/test-org"):
-                mock_resp.json.return_value = cls.org_payload
-            elif url.endswith("/orgs/test-org/repos"):
-                mock_resp.json.return_value = cls.repos_payload
-            return mock_resp
+        def side_effect(url):
+            mock = Mock()
+            if url == "https://api.github.com/orgs/test-org":
+                mock.json.return_value = cls.org_payload
+            elif url == "https://api.github.com/orgs/test-org/repos"):
+                mock.json.return_value = cls.repos_payload
+            return mock
         cls.mock_get.side_effect = side_effect
 
     @classmethod
