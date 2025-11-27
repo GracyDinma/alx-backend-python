@@ -7,7 +7,7 @@ from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 from unittest.mock import patch, PropertyMock
 from utils import get_json
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -79,7 +79,7 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-@parameterized.expand([
+@parameterized_class([
     {
         "org_payload": org_payload,
         "repos_payload": repos_payload,
@@ -102,7 +102,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             elif url.endswith("orgs/test-org/repos"):
                 mock_resp.json.return_value = cls.repos_payload
             return mock_resp
-        mock_get.side_effect = side_effect
+        cls.mock_get.side_effect = side_effect
 
     @classmethod
     def tearDownClass(cls):
