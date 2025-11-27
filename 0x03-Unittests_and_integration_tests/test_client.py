@@ -100,7 +100,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             mock = Mock()
             if url == "https://api.github.com/orgs/test-org":
                 mock.json.return_value = cls.org_payload
-            elif url == "https://api.github.com/orgs/test-org/repos"):
+            elif url == "https://api.github.com/orgs/test-org/repos":
                 mock.json.return_value = cls.repos_payload
             return mock
         cls.mock_get.side_effect = side_effect
