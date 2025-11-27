@@ -95,14 +95,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher = patch("client.requests.get")
         cls.mock_get = cls.get_patcher.start()
 
-        def get_json_side_effect(url, *args, **kwargs):
+        def side_effect(url, *args, **kwargs):
             mock_resp = Mock()
-            if url.endswith("/repos"):
-                mock_resp.json.return_value = cls.repos_payload
-            else:
+            if url.endswith("orgs/test-org"):
                 mock_resp.json.return_value = cls.org_payload
+            elif url.endswith("orgs/test-org/repos"):
+                mock_resp.json.return_value = cls.repos_payload
             return mock_resp
-        cls.mock_get.side_effect = get_json_side_effect
+        mock_get.side_effect = side_effect
 
     @classmethod
     def tearDownClass(cls):
