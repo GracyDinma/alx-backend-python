@@ -5,7 +5,7 @@ A test suite for github org client.
 import unittest
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, Mock
 from utils import get_json
 from parameterized import parameterized
 from parameterized import parameterized_class
@@ -80,14 +80,17 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos
-    }
-])
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    [
+        (
+            org_payload,
+            repos_payload,
+            expected_repos,
+            apache2_repos
+        )
+    ]
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Test method for Integration test"""
     @classmethod
