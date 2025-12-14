@@ -5,7 +5,7 @@ from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 # Create your views here.
-class ConverationViewSet(viewsets.ModelViewSet):
+class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
