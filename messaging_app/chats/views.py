@@ -1,36 +1,27 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 # Create your views here.
 class ConverationViewSet(viewsets.ModelViewSet):
+    queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Conversation.objects.filter(
-            participants=self.request.user
-        ).distinct()
+    filter_backends = [filters.OrderingFilter]
+    ordering = ["created_at"]
     
     def perform_create(self, serializer):
         conversation = serializer.save()
         conversation.participants.add(self.request.user)
 
     class MessageViewSet(viewsets.ModelViewSet):
+        queryset = Message.objects.all()
         serializer_class = MessageSerializer
         permission_classes = [IsAuthenticated]
-
-        def get_query(self):
-            conversation_id = self.request.query_params.get("conversation")
-            qs = Message.objects.all()
-
-            if conversation_id:
-                qs = qs.filter(conversation_id=conversation_id)
-
-            return qs.order_by("sent_at")
+        filter_backends = [filters.OrderingFilter]
+        ordering = ["sent_at"]
         
         def perform_create(self, serializer):
             serializer.save(sender=self.request.user)
