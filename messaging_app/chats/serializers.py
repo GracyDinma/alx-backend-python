@@ -20,18 +20,22 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True)
+    participants = UserSerializer(many=True, read_only=True)
     messages = serializers.SerializerMethodField()
 
     class Meta:
+        model = Conversation
         fields = [
             "conversation_id",
             "participants",
+            "messages",
             "created_at",
         ]
         
-    def get_message(self, obj):
-        msgs = Message.objects.filter(conversation=obj).order_by("sent_at")
+    def get_messages(self, obj):
+        msgs = Message.objects.filter(
+            conversation=obj
+        ).order_by("sent_at")
         return MessageSerializer(msgs, many=True).data
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -46,7 +50,14 @@ class MessageSerializer(serializers.ModelSerializer):
             "message_body",
             "sent_at",
         ]
-
-    def get_messages(Self, obj):
-        msgs = Message.objects.filter(conversation=obj).order_by("sent_at")
         read_only_fields = ["message_id", "sent_at"]
+
+    def get_sender_name(Self, obj):
+        return obj.sender.first_name if obj.sender else None
+    
+    def validate_message_body(self, value):
+        if not value.strip():
+            raise serializers.ValidationError(
+                "Message body cannot be empty"
+            )
+        return value
